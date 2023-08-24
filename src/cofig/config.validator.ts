@@ -8,6 +8,7 @@ export const CONFIG_VALIDATOR: ConfigModuleOptions = {
     DB_PORT: Joi.number(),
     DB_USERNAME: Joi.string().required(),
     DB_PASSWORD: Joi.string().required(),
+    BATCH_TARGET_URL: Joi.string().required()
   }),
   isGlobal: true,
 }

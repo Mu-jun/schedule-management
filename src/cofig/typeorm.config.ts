@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
-import { task } from "src/schedule/entity/task.entity";
+import { Task } from "src/task/entities/task.entity";
 
 @Injectable()
 export class typeORMConfig implements TypeOrmOptionsFactory {
@@ -15,7 +15,7 @@ export class typeORMConfig implements TypeOrmOptionsFactory {
         username: this.configService.get("DB_USERNAME"),
         password: this.configService.get("DB_PASSWORD"),
         database: "schedule",
-        entities: [task],
+        entities: [Task],
         synchronize: false,
         logging: true,
       }

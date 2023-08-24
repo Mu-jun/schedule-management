@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ScheduleModule } from './schedule/schedule.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMConfig } from 'src/cofig/typeorm.config';
 import { CONFIG_VALIDATOR } from './cofig/config.validator';
+import { TaskModule } from './task/task.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { BatchService } from './batch/batch.service';
 
 @Module({
   imports: [
@@ -11,9 +13,10 @@ import { CONFIG_VALIDATOR } from './cofig/config.validator';
     TypeOrmModule.forRootAsync({
       useClass: typeORMConfig,
     }),
-    ScheduleModule,
+    ScheduleModule.forRoot(),
+    TaskModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [BatchService],
 })
 export class AppModule { }

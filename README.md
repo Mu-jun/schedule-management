@@ -1,3 +1,36 @@
+# 일정관리 서버
+> 회사에서 사용하는 간단한 일정관리 앱을 위한 백엔드 서버
+
+## 구성
+- 서버
+  - nestjs
+- DB
+  - mysql + typeorm
+
+## 환경설정
+- ```npm run start```시 ```NODE_ENV=local```로 시작됨.
+- ```.{NODE_ENV}.env``` 파일 필요
+```
+.local.env 예시
+DB_HOST=localhost
+DB_USERNAME=your-mysql-username
+DB_PASSWORD=your-mysql-password
+BATCH_TARGET_URL=localhost:8000
+```
+
+## API문서
+서버실행 후 ```"/api"```에서 swagger로 확인 가능
+
+## 기획 가정
+1. ```모든 일정의 완료 날짜 하루 전에 특정 URL(Post) 로 해당 일정의 내용을 전달하는 기능```
+  - 하루 한 번 다음 날에 완료해야 할 일정의 정보를 한 곳에서 받아보싶다고 가정
+  - 업무 시작 전인 (유연근무제 8시~10시 가정) 매일 8시 전송
+2. 일정의 설명을 제외한 모든 속성은 Null 값을 가질 수 없음.
+
+## 개선점
+1. enum 타입을 Union Type으로 변환
+2. js-joda 또는 luxon 으로 Date타입 대체 검토
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
