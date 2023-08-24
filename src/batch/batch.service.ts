@@ -1,22 +1,26 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { AxiosError } from 'axios';
+import { catchError, firstValueFrom, map } from 'rxjs';
 import { Task } from 'src/task/entities/task.entity';
 import { Between, DataSource, Repository } from 'typeorm';
 
 @Injectable()
 export class BatchService {
   constructor(
-    private dataSource: DataSource,
-    private configService: ConfigService,
+    private readonly dataSource: DataSource,
+    private readonly configService: ConfigService,
+    private readonly httpService: HttpService,
   ) { }
   private readonly batchTargetUrl: string = this.configService.get("BATCH_TARGET_URL");
   private readonly logger = new Logger(BatchService.name);
   private taskRepository: Repository<Task> = this.dataSource.getRepository(Task);
 
   @Cron(
-    // '*/10 * * * * *',
-    CronExpression.EVERY_DAY_AT_8AM,
+    '*/10 * * * * *',
+    // CronExpression.EVERY_DAY_AT_8AM,
     {
       name: "send_task_before_one_day"
     }
@@ -34,19 +38,23 @@ export class BatchService {
       dueDate: Between(startRangeDate, endRangeDate),
     })
 
-    this.logger.log(`send task to ${this.batchTargetUrl}`)
-    this.logger.log(`${startRangeDate} ~ ${endRangeDate}`)
-    this.logger.log(`task count: ${targetTaskList.length}`)
+    this.logger.debug(`send task to ${this.batchTargetUrl}`)
+    this.logger.debug(`${startRangeDate} ~ ${endRangeDate}`)
+    this.logger.debug(`task count: ${targetTaskList.length}`)
 
-    fetch(this.batchTargetUrl, {
-      method: "post",
-      body: JSON.stringify(targetTaskList)
-    }).then(result => {
-      this.logger.log("-----send task result-----");
-      this.logger.log(result)
-    }).catch(err => {
-      this.logger.error("-----send task error-----");
-      this.logger.error(err)
-    })
+    const result = await firstValueFrom(
+      this.httpService.post(this.batchTargetUrl, targetTaskList).pipe(
+        map(resp => {
+          this.logger.log("-----send task result-----");
+          this.logger.log(resp.data);
+          return resp.data;
+        }),
+        catchError((err: AxiosError) => {
+          this.logger.error("-----send task error-----");
+          this.logger.error(err);
+          throw 'An error happened!';
+        })
+      )
+    )
   }
 }

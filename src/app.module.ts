@@ -5,7 +5,7 @@ import { typeORMConfig } from 'src/cofig/typeorm.config';
 import { CONFIG_VALIDATOR } from './cofig/config.validator';
 import { TaskModule } from './task/task.module';
 import { ScheduleModule } from '@nestjs/schedule';
-import { BatchService } from './batch/batch.service';
+import { BatchModule } from './batch/batch.module';
 
 @Module({
   imports: [
@@ -15,8 +15,9 @@ import { BatchService } from './batch/batch.service';
     }),
     ScheduleModule.forRoot(),
     TaskModule,
+    BatchModule,
   ],
   controllers: [],
-  providers: [BatchService],
+  providers: [],
 })
 export class AppModule { }
