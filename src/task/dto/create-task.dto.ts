@@ -9,11 +9,6 @@ export class CreateTaskDto {
   title: string
 
   @IsEmpty()
-  @ApiProperty({
-    description: '일정을 수행할 사람의 이메일',
-    format: 'Email',
-    example: 'test@example.com',
-  })
   user_id: string
 
   @IsOptional()

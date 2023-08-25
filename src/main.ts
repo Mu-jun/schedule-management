@@ -14,13 +14,16 @@ async function bootstrap() {
   )
 
   const config = new DocumentBuilder()
-  .setTitle("일정관리 API")
-  .setDescription("회사에서 사용하는 간단한 일정관리 앱을 위한 API")
-  .setVersion("1.0")
-  .build();
+    .setTitle("일정관리 API")
+    .setDescription("회사에서 사용하는 간단한 일정관리 앱을 위한 API")
+    .setVersion("1.0")
+    .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api", app, document);
-  
+  SwaggerModule.setup("api-docs", app, document, {
+    swaggerOptions: { defaultModelsExpandDepth: -1 },
+  });
+
   await app.listen(3000);
 }
 bootstrap();
