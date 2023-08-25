@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
@@ -40,7 +40,11 @@ export class TaskService {
     }
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number, user_id: string): Promise<void> {
+    const task = await this.taskRepository.findOneBy({ id: id });
+    if (task.user_id != user_id) {
+      throw new ForbiddenException("담당자가 아닙니다.")
+    }
     const result: DeleteResult = await this.taskRepository.delete(id);
     if (result.affected == 0) {
       throw new NotFoundException(`Task with ID-${id} not found.`)

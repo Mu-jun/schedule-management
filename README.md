@@ -27,9 +27,8 @@ BATCH_TARGET_URL=localhost:8000
   - 업무 시작 전인 (유연근무제 8시~10시 가정) 매일 8시 전송
 2. 일정의 설명을 제외한 모든 속성은 Null 값을 가질 수 없음.
 
-## 개선점
-1. enum 타입을 Union Type으로 변환
-2. js-joda 또는 luxon 으로 Date타입 대체 검토
+## 개선해야 할 점
+1. js-joda 또는 luxon 으로 Date타입 대체 검토
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>

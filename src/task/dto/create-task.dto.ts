@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator"
+import { IsDateString, IsEmail, IsEmpty, IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator"
 import { TASK_STATUS } from "../entities/task.entity"
 
 export class CreateTaskDto {
@@ -8,8 +8,7 @@ export class CreateTaskDto {
   @ApiProperty({ description: '제목' })
   title: string
 
-  @IsNotEmpty()
-  @IsEmail()
+  @IsEmpty()
   @ApiProperty({
     description: '일정을 수행할 사람의 이메일',
     format: 'Email',

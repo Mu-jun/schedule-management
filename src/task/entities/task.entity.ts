@@ -13,11 +13,15 @@ export class Task {
   @ApiProperty({ description: '유니크 아이디' })
   id: number
 
-  @Column()
+  @Column({
+    length: 100
+  })
   @ApiProperty({ description: '제목' })
   title: string
 
-  @Column()
+  @Column({
+    length: 100
+  })
   @ApiProperty({
     description: '일정을 수행할 사람의 이메일',
     format: 'Email',
@@ -25,11 +29,15 @@ export class Task {
   })
   user_id: string
 
-  @Column()
+  @Column({
+    length: 500
+  })
   @ApiProperty({ description: '설명', required: false })
   description: string
 
-  @Column()
+  @Column({
+    length: 50
+  })
   @ApiProperty({
     description: 'task의 상태',
     enum: TASK_STATUS,

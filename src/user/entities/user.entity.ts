@@ -1,21 +1,27 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Column, Entity, PrimaryColumn } from "typeorm";
 
-@Entity()
+@Entity("member")
 export class User {
-  @PrimaryColumn()
+  @PrimaryColumn({
+    length: 100
+  })
   @ApiProperty({
     description: '이메일 아이디'
   })
   user_id: string;
 
-  @Column()
+  @Column({
+    length: 45
+  })
   @ApiProperty({
     description: '이름'
   })
   name: string;
 
-  @Column()
+  @Column({
+    length: 255
+  })
   @ApiProperty({
     description: '비밀번호'
   })
