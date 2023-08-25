@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { AxiosError } from 'axios';
 import { catchError, firstValueFrom, map } from 'rxjs';
+import { EnvKey } from 'src/cofig/config.validator';
 import { Task } from 'src/task/entities/task.entity';
 import { Between, DataSource, Repository } from 'typeorm';
 
@@ -14,13 +15,13 @@ export class BatchService {
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) { }
-  private readonly batchTargetUrl: string = this.configService.get("BATCH_TARGET_URL");
+  private readonly batchTargetUrl: string = this.configService.get(EnvKey.BATCH_TARGET_URL);
   private readonly logger = new Logger(BatchService.name);
   private taskRepository: Repository<Task> = this.dataSource.getRepository(Task);
 
   @Cron(
-    '*/10 * * * * *',
-    // CronExpression.EVERY_DAY_AT_8AM,
+    // '*/10 * * * * *',
+    CronExpression.EVERY_DAY_AT_8AM,
     {
       name: "send_task_before_one_day"
     }
