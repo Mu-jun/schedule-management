@@ -1,26 +1,28 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
 import { EnvKey } from "src/cofig/config.validator";
-import { Payload } from "./jwt.payload";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
+  constructor(
+    private configService: ConfigService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: EnvKey.JWT_SECRET,
+      secretOrKey: configService.get(EnvKey.JWT_SECRET),
       ignoreExpiration: false,
     });
   }
 
-  async validate(payload: Payload) {
-    const user = payload.iat < Date.now()
+  async validate(payload: any) {
+    const user = payload.exp > Date.now();
 
     if (user) {
       return payload;
     } else {
-      throw new UnauthorizedException();
+      throw new Error("만료된 토큰입니다.");
     }
   }
 }

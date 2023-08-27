@@ -10,13 +10,10 @@ import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
-    PassportModule.register({
-      defaultStrategy: 'jwt', session: false
-    }),
+    PassportModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: async (config: ConfigService) => ({
-        global: true,
         secret: config.get(EnvKey.JWT_SECRET),
         signOptions: { expiresIn: '60s' }
       })

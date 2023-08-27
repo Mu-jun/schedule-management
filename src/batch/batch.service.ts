@@ -26,8 +26,7 @@ export class BatchService {
       name: "send_task_before_one_day"
     }
   )
-  async handleCron() {
-    const nowDate: Date = new Date();
+  async handleCron(nowDate: Date = new Date()) {
     const nowYear: number = nowDate.getFullYear()
     const nowMonth: number = nowDate.getMonth()
     const nowDayOfMonth: number = nowDate.getDate()
