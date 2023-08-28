@@ -3,13 +3,17 @@
 
 ## 구성
 - 서버
-  - nestjs
+  - nodejs 18.17.1 + nestjs
 - DB
-  - mysql + typeorm
+  - mysql 8.0 + typeorm
 
-## 환경설정
-- ```npm run start```시 ```NODE_ENV=local```로 시작됨.
+## DB 준비
+- 프로젝트 루트 디렉토리에 있는 ```ddl.sql``` 파일을 실행하여 스키마 생성
+
+## 서버 환경설정
 - ```.{NODE_ENV}.env``` 파일 필요
+- ```npm run start```시 ```NODE_ENV=local```로 시작됨.
+- ```.env``` 파일 예시
 ```
 .local.env 예시
 DB_HOST=localhost
@@ -27,8 +31,29 @@ BATCH_TARGET_URL=localhost:8000
   - 업무 시작 전인 (유연근무제 8시~10시 가정) 매일 8시 전송
 2. 일정의 설명을 제외한 모든 속성은 Null 값을 가질 수 없음.
 
+## 디렉토리 구조
+src  
+├─auth : 인증 모듈(로그인)  
+│  ├─dto  
+│  ├─jwt : Gaurd설정  
+│  └─token  
+├─batch : 모든 일정의 완료 날짜 하루 전에 특정 URL(Post) 로 해당 일정의 내용을 전달하는 기능  
+├─cofig : 환경변수 검증 및 사용  
+├─common : 공통 기능  
+│  └─decorators  
+├─exception : 커스텀 예외(사용안함)  
+├─task : 일정 리소스 모듈  
+│  ├─dto  
+│  └─entities  
+└─user : 유저 리소스 모듈  
+│  ├─dto  
+│  └─entities  
+
 ## 개선해야 할 점
-1. js-joda 또는 luxon 으로 Date타입 대체 검토
+1. js-joda 또는 luxon 으로 Date타입 대체 검토.
+2. Cron 주기(하루 중 특정 시간), Jwt 만료시간 등의 설정을 .env 로 추출.
+3. Jwt => Refresh 토큰 추가, 토큰 블랙리스트 관리, 토큰 암호화.
+4. task_status 테이블과 TASK_STATUS 열거형의 값 동기화 방법.
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>

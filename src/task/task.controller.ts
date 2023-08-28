@@ -36,8 +36,11 @@ export class TaskController {
     summary: '유저별 일정목록 조회 API',
     description: '유저 별로 자신의 일정 목록을 불러오는 API'
   })
-  @ApiOkResponse({ description: '조회 성공', type: [Task] })
-  findAllByUserId(@ReqUserId() user_id: string) {
+  @ApiOkResponse({
+    description: '조회 성공',
+    // type: [Task],
+  })
+  findAllByUserId(@ReqUserId() user_id: string): Promise<Task[]> {
     return this.taskService.findAllByUserId(user_id);
   }
 
@@ -69,7 +72,7 @@ export class TaskController {
     @Body() updateTaskDto: UpdateTaskDto,
     @ReqUserId() user_id,
   ) {
-    updateTaskDto.user_id = user_id
+    // updateTaskDto.user_id = user_id
     return this.taskService.update(id, updateTaskDto);
   }
 

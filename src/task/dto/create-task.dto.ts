@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsDateString, IsEmail, IsEmpty, IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator"
+import { IsDateString, IsEmpty, IsEnum, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator"
 import { TASK_STATUS } from "../entities/task.entity"
 
 export class CreateTaskDto {
