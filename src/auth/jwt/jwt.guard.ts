@@ -13,10 +13,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   handleRequest(err: Error, user: any, info: any, context: ExecutionContext, status?: any) {
     this.logger.debug("handle request");
     if (err) {
-      throw new UnauthorizedException(err.message);
+      this.logger.error(err.message);
+      throw new UnauthorizedException("토큰 검증 실패");
     } else if (info) {
       throw new Error(info);
     }
+    this.logger.debug(user);
     return user;
   }
 }

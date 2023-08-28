@@ -57,6 +57,7 @@ CREATE TABLE `task` (
   `dueDate` timestamp NOT NULL COMMENT '완료 날짜',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
+  KEY `dueDate` (`dueDate`),
   KEY `status_idx` (`status`),
   CONSTRAINT `status` FOREIGN KEY (`status`) REFERENCES `task_status` (`status`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

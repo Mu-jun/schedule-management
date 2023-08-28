@@ -22,7 +22,7 @@ export class TokenService {
   }
 
   private expiredHour(hour) {
-    return 60 * 60 * hour
+    return 1000 * 60 * 60 * hour
   }
 
   createAccessToken(user: User): string {

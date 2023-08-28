@@ -11,18 +11,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: true,
       secretOrKey: configService.get(EnvKey.JWT_SECRET),
-      ignoreExpiration: false,
     });
   }
 
   async validate(payload: any) {
-    const user = payload.exp > Date.now();
-
-    if (user) {
+    if (payload.exp > Date.now()) {
       return payload;
     } else {
-      throw new Error("만료된 토큰입니다.");
+      throw new Error(`iat:${payload.iat} exp:${payload.exp} now:${Date.now()}`);
     }
   }
 }

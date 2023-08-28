@@ -2,10 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Task } from './entities/task.entity';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuth } from 'src/common/decorators/jwt.decorator';
 import { ReqUserId } from 'src/common/decorators/req.decorator';
+import { TaskVo } from './vo/task.vo';
 
 @Controller('task')
 @ApiTags('일정 API')
@@ -18,16 +18,19 @@ export class TaskController {
     summary: '일정 생성 API',
     description: '새로운 일정을 등록하는 API'
   })
-  @ApiCreatedResponse({ description: '일정을 생성한다.', type: Task })
+  @ApiCreatedResponse({
+    description: '일정을 생성한다.',
+    type: TaskVo,
+  })
   @ApiBadRequestResponse({
     description: 'request body validation 실패',
   })
   create(
     @Body() createTaskDto: CreateTaskDto,
     @ReqUserId() user_id: string
-  ) {
+  ): Promise<TaskVo> {
     createTaskDto.user_id = user_id
-    return this.taskService.create(createTaskDto);
+    return this.taskService.create(createTaskDto).then(task => new TaskVo(task));
   }
 
   @JwtAuth()
@@ -38,10 +41,11 @@ export class TaskController {
   })
   @ApiOkResponse({
     description: '조회 성공',
-    // type: [Task],
+    type: [TaskVo],
   })
-  findAllByUserId(@ReqUserId() user_id: string): Promise<Task[]> {
-    return this.taskService.findAllByUserId(user_id);
+  findAllByUserId(@ReqUserId() user_id: string): Promise<TaskVo[]> {
+    return this.taskService.findAllByUserId(user_id)
+      .then(taskList => taskList.map(task => new TaskVo(task)));
   }
 
   @JwtAuth()
@@ -50,10 +54,13 @@ export class TaskController {
     summary: '일정 상제조회 API',
     description: '특정 id에 해당하는 Task의 상세 정보를 불러오는 API'
   })
-  @ApiOkResponse({ description: '조회 성공', type: Task })
+  @ApiOkResponse({
+    description: '조회 성공',
+    type: TaskVo,
+  })
   @ApiNotFoundResponse({ description: 'Id가 존재하지 않음' })
-  findOne(@Param('id') id: number) {
-    return this.taskService.findOne(id);
+  findOne(@Param('id') id: number): Promise<TaskVo> {
+    return this.taskService.findOne(id).then(task => new TaskVo(task));
   }
 
   @JwtAuth()
@@ -71,7 +78,7 @@ export class TaskController {
     @Param('id') id: number,
     @Body() updateTaskDto: UpdateTaskDto,
     @ReqUserId() user_id,
-  ) {
+  ): Promise<void> {
     // updateTaskDto.user_id = user_id
     return this.taskService.update(id, updateTaskDto);
   }
@@ -83,8 +90,9 @@ export class TaskController {
     description: '기존 일정을 삭제하는 API'
   })
   @ApiOkResponse({ description: '삭제 성공' })
+  @ApiForbiddenResponse({ description: '담당자가 아닙니다.' })
   @ApiNotFoundResponse({ description: 'Id가 존재하지 않음' })
-  remove(@Param('id') id: number, @ReqUserId() user_id: string) {
+  remove(@Param('id') id: number, @ReqUserId() user_id: string): Promise<void> {
     return this.taskService.remove(id, user_id);
   }
 }
