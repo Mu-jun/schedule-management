@@ -5,6 +5,7 @@ export class TaskVo {
   constructor(taskEntity: Task) {
     this.id = taskEntity.id;
     this.title = taskEntity.title;
+    this.status = taskEntity.status;
     this.user_id = taskEntity.user_id;
     this.description = taskEntity.description;
     this.dueDate = taskEntity.dueDate.toISOString()

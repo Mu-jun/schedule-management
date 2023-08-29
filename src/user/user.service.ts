@@ -1,16 +1,17 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { DataSource } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class UserService {
   constructor(
-    private dataSource: DataSource,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) { }
-  private userRepository = this.dataSource.getRepository(User);
 
-  async signup(createUserDto: CreateUserDto): Promise<void> {
+  async signUp(createUserDto: CreateUserDto): Promise<void> {
     const user = await this.findOne(createUserDto.user_id);
     if (user) {
       throw new ConflictException("이메일이 이미 존재합니다.")

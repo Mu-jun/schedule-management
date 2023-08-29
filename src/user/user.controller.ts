@@ -18,7 +18,7 @@ export class UserController {
     description: 'request body validation 실패',
   })
   @ApiConflictResponse({ description: '이미 등록된 유저' })
-  signup(@Body() createUserDto: CreateUserDto) {
-    this.userService.signup(createUserDto);
+  signUp(@Body() createUserDto: CreateUserDto) {
+    this.userService.signUp(createUserDto);
   }
 }

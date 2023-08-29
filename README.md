@@ -2,8 +2,12 @@
 > 회사에서 사용하는 간단한 일정관리 앱을 위한 백엔드 서버
 
 ## 구성
+- 시스템
+  - OS Version     : Windows 10
+  - NodeJS Version : v18.17.1
+  - NPM Version    : 9.8.1 
 - 서버
-  - nodejs 18.17.1 + nestjs
+  - nestjs
 - DB
   - mysql 8.0 + typeorm
 
@@ -54,6 +58,7 @@ src
 2. Cron 주기(하루 중 특정 시간), Jwt 만료시간 등의 설정을 .env 로 추출.
 3. Jwt => Refresh 토큰 추가, 토큰 블랙리스트 관리, 토큰 암호화.
 4. task_status 테이블과 TASK_STATUS 열거형의 값 동기화 방법.
+5. nestjs CLI plugin 사용하여 swagger 데코레이터 줄이기.
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>

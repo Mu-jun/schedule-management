@@ -17,10 +17,6 @@ export class TaskService {
     return task;
   }
 
-  async findAll(): Promise<Task[]> {
-    return await this.taskRepository.find();
-  }
-
   async findAllByUserId(user_id: string): Promise<Task[]> {
     return await this.taskRepository.findBy({ user_id: user_id });
   }
@@ -42,12 +38,14 @@ export class TaskService {
 
   async remove(id: number, user_id: string): Promise<void> {
     const task = await this.taskRepository.findOneBy({ id: id });
-    if (task.user_id != user_id) {
+    if (!task) {
+      throw new NotFoundException(`Task with ID-${id} not found.`)
+    } else if (task.user_id != user_id) {
       throw new ForbiddenException("담당자가 아닙니다.")
     }
     const result: DeleteResult = await this.taskRepository.delete(id);
-    if (result.affected == 0) {
-      throw new NotFoundException(`Task with ID-${id} not found.`)
-    }
+    // if (result.affected > 1) {
+    //   throw new Error("!?!?")
+    // }
   }
 }

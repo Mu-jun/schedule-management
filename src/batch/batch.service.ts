@@ -2,22 +2,23 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { InjectRepository } from '@nestjs/typeorm';
 import { AxiosError } from 'axios';
 import { catchError, firstValueFrom, map } from 'rxjs';
 import { EnvKey } from 'src/cofig/config.validator';
 import { Task } from 'src/task/entities/task.entity';
-import { Between, DataSource, Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 
 @Injectable()
 export class BatchService {
   constructor(
-    private readonly dataSource: DataSource,
+    @InjectRepository(Task)
+    private taskRepository:Repository<Task>,
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) { }
   private readonly batchTargetUrl: string = this.configService.get(EnvKey.BATCH_TARGET_URL);
   private readonly logger = new Logger(BatchService.name);
-  private taskRepository: Repository<Task> = this.dataSource.getRepository(Task);
 
   @Cron(
     // '*/10 * * * * *',
