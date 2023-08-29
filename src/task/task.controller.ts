@@ -3,9 +3,9 @@ import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { JwtAuth } from 'src/common/decorators/jwt.decorator';
-import { ReqUserId } from 'src/common/decorators/req.decorator';
+import { ReqUserId } from './../common/decorators/req.decorator';
 import { TaskVo } from './vo/task.vo';
+import { JwtAuth } from './../common/decorators/jwt.decorator';
 
 @Controller('task')
 @ApiTags('일정 API')

@@ -27,7 +27,8 @@ BATCH_TARGET_URL=localhost:8000
 ```
 
 ## API문서
-서버실행 후 ```"/api"```에서 swagger로 확인 가능
+- 루트 디렉토리에서 [API 문서](<API 문서.pdf>)를 통해서 확인가능
+- 서버실행 후 ```"/api"```에서 swagger를 통해 확인 가능
 
 ## 기획 가정
 1. ```모든 일정의 완료 날짜 하루 전에 특정 URL(Post) 로 해당 일정의 내용을 전달하는 기능```
@@ -59,6 +60,8 @@ src
 3. Jwt => Refresh 토큰 추가, 토큰 블랙리스트 관리, 토큰 암호화.
 4. task_status 테이블과 TASK_STATUS 열거형의 값 동기화 방법.
 5. nestjs CLI plugin 사용하여 swagger 데코레이터 줄이기.
+6. (기존) service에서 http 컨텍스트 에러 생성  
+  => service에서 커스텀 exception생성, controller에서 http 컨텍스트 에러로 변경
 
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
