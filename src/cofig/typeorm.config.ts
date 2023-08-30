@@ -27,8 +27,6 @@ export class typeORMConfig implements TypeOrmOptionsFactory {
 
 @Injectable()
 export class typeORMTestConfig implements TypeOrmOptionsFactory {
-  constructor(private configService: ConfigService) {}
-  
   createTypeOrmOptions(): TypeOrmModuleOptions {
       return {
         type: "sqlite",

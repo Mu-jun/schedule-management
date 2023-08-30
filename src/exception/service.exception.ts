@@ -7,8 +7,8 @@ export class ServiceException extends Error {
   readonly status: number;
 }
 
-// export class ConflictException extends ServiceException {
-//   constructor(message: string) {
-//     super(409, message)
-//   }
-// }
+export class ResourceConflictException extends ServiceException {
+  constructor(message: string) {
+    super(409, message)
+  }
+}

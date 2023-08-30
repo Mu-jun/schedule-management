@@ -11,13 +11,13 @@ export class UserService {
     private userRepository: Repository<User>,
   ) { }
 
-  async signUp(createUserDto: CreateUserDto): Promise<void> {
+  async signUp(createUserDto: CreateUserDto): Promise<any> {
     const user = await this.findOne(createUserDto.user_id);
     if (user) {
       throw new ConflictException("이메일이 이미 존재합니다.")
     }
     const { password, ...result } = await this.userRepository.save(createUserDto);
-    // return result
+    return result
   }
 
   async findOne(user_id: string): Promise<User> {

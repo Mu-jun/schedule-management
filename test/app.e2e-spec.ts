@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ConflictException, HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
+import { HttpStatus, INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
 import { User } from './../src/user/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeORMTestConfig } from './../src/cofig/typeorm.config';
+import { typeORMConfig, typeORMTestConfig } from './../src/cofig/typeorm.config';
 import { Repository } from 'typeorm';
 
 describe('AppController (e2e)', () => {
@@ -14,11 +14,11 @@ describe('AppController (e2e)', () => {
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).overrideModule(TypeOrmModule).useModule(
-      TypeOrmModule.forRootAsync({
-        useClass: typeORMTestConfig,
-      })
-    ).compile();
+    }).overrideModule(TypeOrmModule.forRootAsync({
+      useClass: typeORMConfig,
+    })).useModule(TypeOrmModule.forRootAsync({
+      useClass: typeORMTestConfig,
+    })).compile();
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(

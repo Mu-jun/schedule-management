@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { typeORMConfig } from './cofig/typeorm.config';
+import { typeORMConfig, typeORMTestConfig } from './cofig/typeorm.config';
 import { CONFIG_VALIDATOR } from './cofig/config.validator';
 import { TaskModule } from './task/task.module';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -13,7 +13,7 @@ import { AuthModule } from './auth/auth.module';
   imports: [
     ConfigModule.forRoot(CONFIG_VALIDATOR),
     TypeOrmModule.forRootAsync({
-      useClass: typeORMConfig,
+      useClass: process.env.NOED_ENV == 'local' ? typeORMConfig : typeORMTestConfig,
     }),
     ScheduleModule.forRoot(),
     TaskModule,
