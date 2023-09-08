@@ -11,13 +11,13 @@ describe('TaskService', () => {
   let service: TaskService;
   let taskRepository: MockRepository<Task>;
 
-  function createTestTask(num: number): Task {
+  function createTestTask(num: number, date: Date = new Date()): Task {
     const task = new Task();
     task.id = num
     task.user_id = `test${num}@example.com`;
     task.title = `test${num} title`;
     task.description = `test${num} description`;
-    task.dueDate = new Date();
+    task.dueDate = date;
     task.status = TASK_STATUS.PENDING;
     return task;
   }
@@ -100,7 +100,7 @@ describe('TaskService', () => {
       // give
       const task1 = createTestTask(1);
       const { id, ...dto } = new TaskVo(task1);
-      const updateResult:UpdateResult = new UpdateResult();
+      const updateResult: UpdateResult = new UpdateResult();
       updateResult.affected = 1;
       taskRepository.update.mockReturnValue(updateResult);
 
@@ -115,7 +115,7 @@ describe('TaskService', () => {
       // give
       const task1 = createTestTask(1);
       const { id, ...dto } = new TaskVo(task1);
-      const updateResult:UpdateResult = new UpdateResult();
+      const updateResult: UpdateResult = new UpdateResult();
       updateResult.affected = 0;
       taskRepository.update.mockReturnValue(updateResult);
 
@@ -132,7 +132,7 @@ describe('TaskService', () => {
     it('normal test', async () => {
       // give
       const task1 = createTestTask(1);
-      const deleteResult:DeleteResult = new DeleteResult();
+      const deleteResult: DeleteResult = new DeleteResult();
       deleteResult.affected = 1;
       taskRepository.findOneBy.mockReturnValue(task1);
       taskRepository.delete.mockReturnValue(deleteResult);
@@ -170,6 +170,24 @@ describe('TaskService', () => {
 
         // then
       }).rejects.toThrowError(new ForbiddenException("담당자가 아닙니다."));
+    })
+  })
+
+  describe('taskDueTomorrow', () => {
+    it('normal test', async () => {      
+      // give
+      const nowDate = new Date(2023, 9, 12, 16);
+      const tomorrow = new Date(2023, 9, 13, 15)
+      const task1 = createTestTask(1, tomorrow);
+      const task2 = createTestTask(2, tomorrow);
+      taskRepository.findBy.mockReturnValue([task1, task2]);
+
+      // when
+      const result = await service.taskDueTomorrow(nowDate);
+
+      // then
+      expect(result.length).toBe(2);
+      expect(result).toStrictEqual([task1, task2]);
     })
   })
 });

@@ -1,9 +1,9 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { Task } from './entities/task.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository, UpdateResult } from 'typeorm';
+import { Between, DeleteResult, Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class TaskService {
@@ -11,6 +11,8 @@ export class TaskService {
     @InjectRepository(Task)
     private taskRepository: Repository<Task>,
   ) { }
+
+  private logger = new Logger(TaskService.name);
 
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     const task = await this.taskRepository.save(createTaskDto);
@@ -47,5 +49,20 @@ export class TaskService {
     // if (result.affected > 1) {
     //   throw new Error("!?!?")
     // }
+  }
+
+  async taskDueTomorrow(nowDate: Date = new Date()): Promise<Task[]> {
+    const nowYear: number = nowDate.getFullYear()
+    const nowMonth: number = nowDate.getMonth()
+    const nowDayOfMonth: number = nowDate.getDate()
+
+    const startRangeDate = new Date(nowYear, nowMonth, nowDayOfMonth + 1)
+    const endRangeDate = new Date(nowYear, nowMonth, nowDayOfMonth + 2)
+
+    this.logger.debug(`${startRangeDate} ~ ${endRangeDate}`)
+    
+    return await this.taskRepository.findBy({
+      dueDate: Between(startRangeDate, endRangeDate),
+    })
   }
 }

@@ -7,13 +7,13 @@ import { AxiosError } from 'axios';
 import { catchError, firstValueFrom, map } from 'rxjs';
 import { EnvKey } from 'src/cofig/config.validator';
 import { Task } from 'src/task/entities/task.entity';
-import { Between, Repository } from 'typeorm';
+import { TaskService } from 'src/task/task.service';
 
 @Injectable()
 export class BatchService {
   constructor(
     @InjectRepository(Task)
-    private taskRepository:Repository<Task>,
+    private taskService: TaskService,
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
   ) { }
@@ -27,20 +27,9 @@ export class BatchService {
       name: "send_task_before_one_day"
     }
   )
-  async handleCron(nowDate: Date = new Date()) {
-    const nowYear: number = nowDate.getFullYear()
-    const nowMonth: number = nowDate.getMonth()
-    const nowDayOfMonth: number = nowDate.getDate()
+  async handleCron() {
 
-    const startRangeDate = new Date(nowYear, nowMonth, nowDayOfMonth + 1)
-    const endRangeDate = new Date(nowYear, nowMonth, nowDayOfMonth + 2)
-
-    const targetTaskList = await this.taskRepository.findBy({
-      dueDate: Between(startRangeDate, endRangeDate),
-    })
-
-    this.logger.debug(`send task to ${this.batchTargetUrl}`)
-    this.logger.debug(`${startRangeDate} ~ ${endRangeDate}`)
+    const targetTaskList = await this.taskService.taskDueTomorrow();
     this.logger.debug(`task count: ${targetTaskList.length}`)
 
     const result = await firstValueFrom(
