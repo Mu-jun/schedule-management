@@ -38,7 +38,7 @@
     "class-validator": "^0.14.0",
     "cross-env": "^7.0.3",
     "joi": "^17.9.2",
-    "mysql2": "^3.6.0",
+    "mysql2": "^3.9.8",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
